@@ -1,15 +1,18 @@
-name: Debug OIDC Claims
+name: Manual OIDC Token Test
 
 on:
-  workflow_dispatch:   # This allows you to trigger it MANUALLY from GitHub UI
+  workflow_dispatch:   # Manual trigger
 
 permissions:
-  id-token: write   # Required for requesting the JWT
+  id-token: write
   contents: read
 
 jobs:
-  debug-oidc:
+  test-oidc:
     runs-on: ubuntu-latest
     steps:
-      - name: Debug OIDC Claims
-        uses: github/actions-oidc-debugger@main
+      - name: Request and Display OIDC Token
+        run: |
+          echo "Requesting OIDC Token..."
+          curl -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+          "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=api://AzureADTokenExchange"
