@@ -1,4 +1,4 @@
-name: Manual OIDC Token Test
+name: Manual OIDC Token Test - AWS
 
 on:
   workflow_dispatch:
@@ -11,16 +11,16 @@ jobs:
   test-oidc:
     runs-on: ubuntu-latest
     steps:
-      - name: Request and Decode OIDC Token
+      - name: Request and Decode OIDC Token for AWS
         run: |
-          # Request the token
+          # Request the token with AWS audience
           TOKEN_RESPONSE=$(curl -s \
             -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
-            "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=api://AzureADTokenExchange")
+            "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sts.amazonaws.com")
 
           # Extract the JWT value
           JWT=$(echo $TOKEN_RESPONSE | jq -r '.value')
 
-          # Decode the payload (middle part of JWT)
-          echo "=== OIDC Claims ==="
+          # Decode the payload
+          echo "=== OIDC Claims for AWS ==="
           echo $JWT | cut -d'.' -f2 | base64 -d 2>/dev/null | jq .
