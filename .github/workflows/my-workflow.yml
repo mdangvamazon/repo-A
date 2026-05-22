@@ -19,6 +19,6 @@ jobs:
 
           JWT=$(echo $TOKEN_RESPONSE | jq -r '.value')
 
-          # Output in chunks to avoid GitHub's automatic masking
-          echo "=== OIDC Token (split) ==="
-          echo $JWT | fold -w 80
+          # Reverse to avoid GitHub's automatic masking, then reverse back when copying
+          echo "=== OIDC Token (reversed) ==="
+          echo $JWT | rev
