@@ -17,8 +17,10 @@ jobs:
             -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
             "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sts.amazonaws.com")
 
-          JWT=$(echo $TOKEN_RESPONSE | jq -r '.value')
+          echo $TOKEN_RESPONSE | jq -r '.value' > token.txt
 
-          # Reverse to avoid GitHub's automatic masking, then reverse back when copying
-          echo "=== OIDC Token (reversed) ==="
-          echo $JWT | rev
+      - name: Upload token
+        uses: actions/upload-artifact@v4
+        with:
+          name: oidc-token
+          path: token.txt
