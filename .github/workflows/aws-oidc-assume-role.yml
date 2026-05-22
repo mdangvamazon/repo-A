@@ -1,0 +1,21 @@
+name: AWS OIDC AssumeRole
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  assume-role:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::396608813087:role/GitHubActionsRole
+          aws-region: us-east-1
+
+      - name: Verify Identity
+        run: aws sts get-caller-identity
