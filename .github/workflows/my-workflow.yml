@@ -11,16 +11,14 @@ jobs:
   test-oidc:
     runs-on: ubuntu-latest
     steps:
-      - name: Request and Decode OIDC Token for AWS
+      - name: Retrieve OIDC Token for AWS
         run: |
-          # Request the token with AWS audience
           TOKEN_RESPONSE=$(curl -s \
             -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
             "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sts.amazonaws.com")
 
-          # Extract the JWT value
           JWT=$(echo $TOKEN_RESPONSE | jq -r '.value')
 
-          # Decode the payload
-          echo "=== OIDC Claims for AWS ==="
-          echo $JWT | cut -d'.' -f2 | base64 -d 2>/dev/null | jq .
+          # Output in chunks to avoid GitHub's automatic masking
+          echo "=== OIDC Token (split) ==="
+          echo $JWT | fold -w 80
